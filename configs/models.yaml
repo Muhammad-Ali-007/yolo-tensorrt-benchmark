@@ -1,0 +1,42 @@
+# Which model variants to benchmark, and where their artifacts live at each
+# stage of the pipeline. Add/remove entries freely — every script iterates
+# this list, nothing is hardcoded per-model.
+
+input_size: 640          # square input, HxW
+batch_size: 1            # keep at 1 for latency numbers; bump for throughput-only runs
+
+models:
+  - name: yolov8n
+    weights: weights/yolov8n.pt        # ultralytics auto-downloads if missing
+    onnx: weights/yolov8n.onnx
+    engines:
+      fp32: engines/yolov8n_fp32.engine
+      fp16: engines/yolov8n_fp16.engine
+      int8: engines/yolov8n_int8.engine
+
+  - name: yolov8s
+    weights: weights/yolov8s.pt
+    onnx: weights/yolov8s.onnx
+    engines:
+      fp32: engines/yolov8s_fp32.engine
+      fp16: engines/yolov8s_fp16.engine
+      int8: engines/yolov8s_int8.engine
+
+  - name: yolo11n
+    weights: weights/yolo11n.pt
+    onnx: weights/yolo11n.onnx
+    engines:
+      fp32: engines/yolo11n_fp32.engine
+      fp16: engines/yolo11n_fp16.engine
+      int8: engines/yolo11n_int8.engine
+
+  - name: yolo11s
+    weights: weights/yolo11s.pt
+    onnx: weights/yolo11s.onnx
+    engines:
+      fp32: engines/yolo11s_fp32.engine
+      fp16: engines/yolo11s_fp16.engine
+      int8: engines/yolo11s_int8.engine
+
+# Add newer releases (YOLOv12, YOLO26, etc.) the same way once you've
+# confirmed ultralytics/the upstream repo supports exporting them to ONNX.

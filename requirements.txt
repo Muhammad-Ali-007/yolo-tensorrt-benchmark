@@ -1,0 +1,22 @@
+# Core
+numpy
+opencv-python
+pyyaml
+tqdm
+pandas
+matplotlib
+
+# Model export / baseline inference
+ultralytics>=8.2.0
+onnx
+onnxruntime           # swap for onnxruntime-gpu off-Jetson if you want a GPU ONNX baseline too
+onnxsim
+
+# TensorRT inference (TensorRT itself + its Python bindings ship with JetPack —
+# do NOT pip install "tensorrt" on Jetson, use the system one:
+#   sudo apt install python3-libnvinfer python3-libnvinfer-dev
+# pycuda is what's missing by default:
+pycuda
+
+# Accuracy evaluation
+pycocotools

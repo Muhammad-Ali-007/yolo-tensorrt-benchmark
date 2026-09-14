@@ -1,0 +1,20 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Downloaded dataset / calibration images — large, don't commit
+data/*
+!data/.gitkeep
+
+# Generated model artifacts — large, reproducible from scripts, don't commit
+*.onnx
+*.engine
+*.pt
+weights/
+
+# Generated results — commit benchmark_results.csv / accuracy_results.csv and
+# results/plots/*.png deliberately once you have real numbers from hardware.
+results/*.tmp
+
+.DS_Store

@@ -1,0 +1,4 @@
+# Force LF everywhere — this runs on a Jetson (Linux). CRLF in scripts/download_data.sh
+# in particular would break its shebang when run there.
+* text=auto eol=lf
+*.sh text eol=lf
