@@ -14,7 +14,7 @@ Goal: benchmark how Ultralytics' **DOTAv1-pretrained OBB models** perform across
 
 - Tick a box only when its evidence exists (a CSV row, a log, a committed file).
 - Every number in the README traces to a row in `results/*.csv`. No hand-written numbers.
-- One stage at a time. Commit when a stage is done, not before.
+- One stage at a time. 
 - Official Ultralytics weights and public DOTAv1 data only.
 - Evaluation and calibration are never reduced to save time. If runtime is a problem, report it and let me decide.
 - Long jobs run under `tmux` or `nohup` and append a CSV row as each configuration finishes, so a crash or a restart doesn't lose finished work.
