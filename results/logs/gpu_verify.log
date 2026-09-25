@@ -1,0 +1,25 @@
+==============================================================
+CHECK 1 — PyTorch CUDA
+==============================================================
+torch                : 2.11.0
+torch.cuda.is_available(): True
+device               : Orin
+capability           : (8, 7)
+2048^3 matmul on GPU : 20.65 ms/iter
+matches CPU result   : True
+tensor .device       : cuda:0
+
+==============================================================
+CHECK 2 — ONNX Runtime CUDAExecutionProvider (node placement)
+==============================================================
+onnxruntime          : 1.23.0
+get_device()         : GPU
+available providers  : ['TensorrtExecutionProvider', 'CUDAExecutionProvider', 'CPUExecutionProvider']
+model under test     : weights/yolov8n.onnx
+session providers    : ['CUDAExecutionProvider', 'CPUExecutionProvider']
+node executions by provider: {'CUDAExecutionProvider': 4375}
+CUDA EP latency      : 18.16 ms
+CPU  EP latency      : 84.96 ms
+speedup              : 4.68x
+
+VERDICT: CUDA nodes=4375 CPU nodes=0 -> REAL GPU EXECUTION

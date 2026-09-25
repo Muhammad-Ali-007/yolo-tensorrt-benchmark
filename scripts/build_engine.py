@@ -8,19 +8,18 @@ Usage:
 import argparse
 import sys
 from pathlib import Path
-from typing import Optional
 
 import tensorrt as trt
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from calibrate_int8 import ImageCalibrator  # noqa: E402
+from calibrate_int8 import ImageCalibrator
 
 TRT_LOGGER = trt.Logger(trt.Logger.WARNING)
 
 
 def build_engine(onnx_path: str, engine_path: str, precision: str,
-                  input_size: int, batch_size: int, calib_dir: Optional[str]) -> None:
+                  input_size: int, batch_size: int, calib_dir: str | None) -> None:
     builder = trt.Builder(TRT_LOGGER)
     network = builder.create_network(
         1 << int(trt.NetworkDefinitionCreationFlag.EXPLICIT_BATCH)
@@ -34,7 +33,9 @@ def build_engine(onnx_path: str, engine_path: str, precision: str,
             raise RuntimeError(f"failed to parse {onnx_path}")
 
     config = builder.create_builder_config()
-    config.max_workspace_size = 2 << 30  # 2GB — adjust down if the Orin NX is under memory pressure
+    # TensorRT 10 removed IBuilderConfig.max_workspace_size in favour of the
+    # memory-pool API. 2GB — adjust down if the Orin NX is under memory pressure.
+    config.set_memory_pool_limit(trt.MemoryPoolType.WORKSPACE, 2 << 30)
 
     if precision == "fp16":
         if not builder.platform_has_fast_fp16:

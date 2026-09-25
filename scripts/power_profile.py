@@ -22,7 +22,7 @@ import pandas as pd
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from scripts.benchmark import benchmark_engine  # noqa: E402
+from scripts.benchmark import benchmark_engine
 
 # tegrastats line format varies by JetPack version; this targets the common
 # "VDD_IN <mW>/<mW avg>" and "CPU@<C>C ... GPU@<C>C" fields. If your

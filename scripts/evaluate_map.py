@@ -20,7 +20,7 @@ from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from src.trt_infer import TensorRTInfer  # noqa: E402
+from src.trt_infer import TensorRTInfer
 
 # Standard COCO 80-class index -> category_id mapping (skips the 11 unused ids)
 COCO80_TO_COCO91 = [
@@ -40,34 +40,67 @@ def preprocess(image_bgr, input_size):
     return img, (w0 / input_size, h0 / input_size)
 
 
-def postprocess_to_coco_dets(raw_output, scale_xy, image_id, conf_thresh=0.25):
-    """Decode a YOLO-style [1, N, 4+1+80] (or similar) output into COCO-format
-    detection dicts. YOLO export head layouts vary by version — check
-    `raw_output.shape` for your exported model and adjust the slicing below
-    if it doesn't match (this targets the common ultralytics export layout).
+def postprocess_to_coco_dets(raw_output, scale_xy, image_id,
+                             conf_thresh=0.25, iou_thresh=0.7):
+    """Decode a YOLO detection head output into COCO-format detection dicts.
+
+    Ultralytics YOLOv8/v11 ONNX exports emit [1, 4+nc, 8400] — *channels
+    first*, i.e. the transpose of "one row per candidate". Verify with
+    `raw_output.shape` if you swap in a model from another family; the
+    orientation check below handles both layouts.
+
+    NMS is not optional here. The raw head emits ~8400 candidates and a
+    single object typically survives conf-thresholding as dozens of
+    near-duplicate boxes. COCOeval matches one of them as a true positive
+    and counts the rest as false positives, which quietly collapses
+    precision — the failure looks like "INT8 hurt accuracy" when in fact
+    the decode was wrong.
     """
-    preds = raw_output.reshape(raw_output.shape[-2], raw_output.shape[-1]) \
-        if raw_output.ndim == 3 else raw_output
+    preds = np.squeeze(raw_output)
+    if preds.ndim != 2:
+        raise ValueError(
+            f"expected a 2D detection head after squeeze, got {raw_output.shape}"
+        )
+    # (4+nc, num_anchors) -> (num_anchors, 4+nc)
+    if preds.shape[0] < preds.shape[1]:
+        preds = preds.T
 
-    dets = []
-    for row in preds:
-        cx, cy, w, h = row[:4]
-        class_scores = row[4:]
-        cls_id = int(np.argmax(class_scores))
-        conf = float(class_scores[cls_id])
-        if conf < conf_thresh:
-            continue
+    boxes_cxcywh = preds[:, :4]
+    class_scores = preds[:, 4:]
+    cls_ids = np.argmax(class_scores, axis=1)
+    confs = class_scores[np.arange(class_scores.shape[0]), cls_ids]
 
-        sx, sy = scale_xy
-        x = (cx - w / 2) * sx
-        y = (cy - h / 2) * sy
-        dets.append({
+    keep = confs >= conf_thresh
+    if not np.any(keep):
+        return []
+    boxes_cxcywh, cls_ids, confs = boxes_cxcywh[keep], cls_ids[keep], confs[keep]
+
+    # cxcywh (model input space) -> xywh top-left, rescaled to original image
+    sx, sy = scale_xy
+    cx, cy, w, h = boxes_cxcywh.T
+    x = (cx - w / 2) * sx
+    y = (cy - h / 2) * sy
+    w = w * sx
+    h = h * sy
+    boxes_xywh = np.stack([x, y, w, h], axis=1)
+
+    # Class-aware NMS: boxes of different classes must not suppress each other.
+    kept_idx = cv2.dnn.NMSBoxesBatched(
+        boxes_xywh.tolist(), confs.astype(np.float32).tolist(),
+        cls_ids.astype(np.int32).tolist(), conf_thresh, iou_thresh,
+    )
+    if len(kept_idx) == 0:
+        return []
+
+    return [
+        {
             "image_id": image_id,
-            "category_id": COCO80_TO_COCO91[cls_id],
-            "bbox": [float(x), float(y), float(w * sx), float(h * sy)],
-            "score": conf,
-        })
-    return dets
+            "category_id": COCO80_TO_COCO91[int(cls_ids[i])],
+            "bbox": [float(v) for v in boxes_xywh[i]],
+            "score": float(confs[i]),
+        }
+        for i in np.array(kept_idx).flatten()
+    ]
 
 
 def evaluate_engine(engine_path, coco, img_dir, input_size, limit=None):

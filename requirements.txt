@@ -1,3 +1,15 @@
+# ---------------------------------------------------------------------------
+# ON A JETSON: do NOT `pip install -r requirements.txt` into a bare venv.
+# Run `bash scripts/setup_venv.sh` instead.
+#
+# numpy, opencv-python, ultralytics, onnx and torch/torchvision are already
+# provided by JetPack / the system image as aarch64 CUDA builds. Installing
+# the PyPI versions over them shadows the CUDA-enabled OpenCV and can replace
+# the working torch with a wheel that has no GPU support. setup_venv.sh makes
+# a --system-site-packages venv and installs only what is genuinely missing
+# (pycuda, pycocotools).
+# ---------------------------------------------------------------------------
+
 # Core
 numpy
 opencv-python

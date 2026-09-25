@@ -20,7 +20,7 @@ import pycuda.driver as cuda
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from src.trt_infer import TensorRTInfer  # noqa: E402
+from src.trt_infer import TensorRTInfer
 
 
 def percentile(values, p):

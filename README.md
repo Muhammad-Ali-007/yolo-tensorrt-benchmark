@@ -1,9 +1,9 @@
-# YOLO → TensorRT Benchmark Suite (Jetson Orin NX)
+# YOLO OBB → TensorRT Benchmark Suite (Jetson Orin NX)
 
-Benchmarks PyTorch YOLO models exported through ONNX into TensorRT engines at
-FP32 / FP16 / INT8, and measures the actual cost of each optimization step —
-latency, throughput, accuracy, and (optionally) power/thermal draw — on a
-Jetson Orin NX.
+Benchmarks Ultralytics' **DOTAv1-pretrained oriented-bounding-box (OBB)**
+models across five deployment formats on a Jetson Orin NX, and reports what
+each format actually costs in rotated-box accuracy, latency, file size, memory
+and power.
 
 > **Independent personal project.** Not affiliated with, and uses no data or
 > code from, any funded/sponsored research project I've worked on. All models
@@ -11,98 +11,84 @@ Jetson Orin NX.
 
 ## Why this exists
 
-Everyone benchmarks YOLO on a desktop GPU. Fewer people show the actual
-precision-vs-speed-vs-accuracy tradeoff *on the edge hardware it's meant to
-run on*, and almost nobody shows what that costs in power draw or thermal
-throttling over a sustained run — which is what actually matters for a
-battery-powered or thermally-constrained deployment.
+Most YOLO benchmarks measure horizontal-box detection on a desktop GPU. This
+one measures **rotated-box detection on edge hardware**, which is where aerial
+and overhead imagery actually gets deployed — and it includes the parts people
+usually skip: whether INT8 quantization damages *angle* regression, and whether
+the board can sustain the throughput without thermal throttling.
 
-This repo answers three questions per model:
-1. **How much faster is TensorRT than the raw PyTorch/ONNX baseline?**
-2. **What does each precision level (FP32 → FP16 → INT8) cost in accuracy?**
-3. **Can the Jetson actually sustain that throughput without throttling?**
+Three questions per model:
 
-## Hardware / software this was built for
+1. **How much faster is TensorRT than the PyTorch and ONNX Runtime baselines?**
+2. **What does each precision level (FP32 → FP16 → INT8) cost in OBB accuracy?**
+3. **Can the Jetson sustain that throughput without throttling?**
 
-- NVIDIA Jetson Orin NX 8GB, JetPack (fill in your version: `dpkg -l | grep nvidia-jetpack`)
-- TensorRT (ships with JetPack — check `python3 -c "import tensorrt; print(tensorrt.__version__)"`)
-- Python 3.8+ (JetPack default)
+## Scope
 
-## Repo structure
+| | |
+|---|---|
+| **Models (4)** | `yolo11n-obb`, `yolo11s-obb`, `yolo26n-obb`, `yolo26s-obb` |
+| **Formats (5)** | PyTorch FP32 *(baseline)*, ONNX Runtime GPU FP32 *(baseline)*, TensorRT FP32, TensorRT FP16, TensorRT INT8 |
+| **Configurations** | 20 (4 models × 5 formats), `imgsz=1024`, batch 1 |
+| **Data** | DOTAv1 train + val, tiled to 1024×1024 with Ultralytics' `split_dota` |
+| **Evaluation** | the **entire** val tile set — no subsampling |
+| **INT8 calibration** | seeded sample of ≥1000 **train** tiles, disjoint from val |
 
-```
-.
-├── configs/
-│   └── models.yaml          # which model variants + precisions to benchmark
-├── scripts/
-│   ├── download_data.sh     # pulls a small public COCO val2017 subset for eval/calibration
-│   ├── export_onnx.py       # PyTorch (.pt) -> ONNX
-│   ├── build_engine.py      # ONNX -> TensorRT engine (fp32 / fp16 / int8)
-│   ├── calibrate_int8.py    # INT8 entropy calibrator used by build_engine.py
-│   ├── benchmark.py         # latency/throughput benchmark, writes results/benchmark_results.csv
-│   ├── evaluate_map.py      # mAP@0.5:0.95 per engine, writes results/accuracy_results.csv
-│   ├── power_profile.py     # wraps benchmark.py with tegrastats power/thermal logging
-│   └── plot_results.py      # generates the charts in results/plots/
-├── src/
-│   └── trt_infer.py         # TensorRTInfer: engine loading, buffer allocation, inference
-├── results/                 # benchmark_results.csv, accuracy_results.csv, plots/ (generated, not fabricated)
-└── data/                    # downloaded dataset lives here (gitignored)
-```
+Official Ultralytics weights and public DOTAv1 data only. The DOTAv1 **test**
+split has no public labels and is not used anywhere.
+
+**Out of scope:** video / stream FPS, inference-time tiling or SAHI, training,
+other datasets, and FP16 for the PyTorch/ONNX baselines (like-for-like
+comparisons are made at FP32).
+
+See [ROADMAP.md](ROADMAP.md) for staged progress and [CLAUDE.md](CLAUDE.md) for
+how the repo is worked in.
+
+## Hardware / software
+
+Verified on-device and recorded in
+**[results/environment.md](results/environment.md)** — including the two GPU
+checks (PyTorch CUDA, and ONNX Runtime really executing on
+`CUDAExecutionProvider` rather than silently falling back to CPU).
+
+| | |
+|---|---|
+| Board | NVIDIA Jetson Orin NX, 8GB module |
+| JetPack / L4T | 6.2 / R36.5.0, CUDA 12.6 |
+| TensorRT | 10.3.0 (ships with JetPack) |
+| ultralytics | 8.4.104 |
+| onnxruntime-gpu | 1.23.0 |
+| torch | 2.11.0 (NVIDIA Jetson build) |
+
+Execution is **Jetson-only** — `tensorrt` and `pycuda` need the board.
 
 ## Quickstart
 
 ```bash
-pip install -r requirements.txt
-bash scripts/download_data.sh                 # small COCO val2017 subset
-
-# 1. Export each configured model to ONNX
-python scripts/export_onnx.py --config configs/models.yaml
-
-# 2. Build TensorRT engines at each precision
-python scripts/build_engine.py --config configs/models.yaml --precision fp32
-python scripts/build_engine.py --config configs/models.yaml --precision fp16
-python scripts/build_engine.py --config configs/models.yaml --precision int8 --calib-data data/calib
-
-# 3. Benchmark latency/throughput
-python scripts/benchmark.py --config configs/models.yaml --iterations 500 --warmup 50
-
-# 4. Evaluate accuracy per engine
-python scripts/evaluate_map.py --config configs/models.yaml --data data/val2017
-
-# 5. (optional) power/thermal profile while benchmarking
-python scripts/power_profile.py --config configs/models.yaml --power-mode 15W
-
-# 6. Plot everything
-python scripts/plot_results.py
+# 1. Environment. Do NOT use a bare `pip install -r requirements.txt` on a
+#    Jetson — see the header of requirements.txt for why.
+bash scripts/setup_venv.sh
+source .venv/bin/activate
 ```
+
+The remaining pipeline commands are added as each roadmap stage lands, so that
+every documented command is one that has actually been run on the board.
 
 ## Results
 
-Not filled in yet — numbers below are placeholders until run on hardware.
-Run the pipeline above and replace this table; **do not** hand-edit numbers
-in without a corresponding `results/benchmark_results.csv` row backing them.
+**No results yet.** The pipeline for the new OBB scope has not been run.
 
-| Model | Precision | Latency (ms, p50) | Latency (ms, p95) | FPS | mAP@0.5:0.95 | Engine size |
-|---|---|---|---|---|---|---|
-| yolov8n | FP32 | – | – | – | – | – |
-| yolov8n | FP16 | – | – | – | – | – |
-| yolov8n | INT8 | – | – | – | – | – |
-| yolo11n | FP32 | – | – | – | – | – |
-| yolo11n | FP16 | – | – | – | – | – |
-| yolo11n | INT8 | – | – | – | – | – |
+Numbers appear here only once `results/accuracy_results.csv`,
+`results/benchmark_results.csv` and `results/power_results.csv` exist, and
+**every value in this section must trace to a row in one of those files**.
+Estimated or hand-written numbers are not acceptable — an unverifiable
+benchmark is worse than no benchmark.
 
-Power/thermal (optional, `power_profile.py`):
-
-| Model | Precision | Power mode | Avg power (mW) | Peak temp (°C) | Throttled? |
-|---|---|---|---|---|---|
-| – | – | – | – | – | – |
-
-## Roadmap
-
-- [ ] Fill in results table from actual Orin NX runs
-- [ ] Add a second dataset option (VisDrone) for an aerial-detection angle
-- [ ] Add DeepStream multi-stream variant for batched throughput numbers
-- [ ] INT8 calibration dataset ablation (does calibration set size/composition matter?)
+Earlier COCO / horizontal-box / 640px results from this repo's previous scope
+are kept in
+[results/archive/coco_detect_640/](results/archive/coco_detect_640/) for
+reference. They are **not** comparable to the current scope: different task,
+dataset, input size and measurement protocol.
 
 ## License
 
