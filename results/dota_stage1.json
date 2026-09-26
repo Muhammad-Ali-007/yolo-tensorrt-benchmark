@@ -1,0 +1,23 @@
+{
+  "crop_size": 1024,
+  "gap": 200,
+  "rates": [
+    1.0
+  ],
+  "train_tiles": {
+    "total": 15749,
+    "labelled": 9734,
+    "background": 6015
+  },
+  "val_tiles": {
+    "total": 5297,
+    "labelled": 3066,
+    "background": 2231
+  },
+  "calibration": {
+    "count": 1000,
+    "seed": 0,
+    "pool_size": 9734,
+    "overlap_with_val": 0
+  }
+}

@@ -1,0 +1,29 @@
+# Generated for Stage 1. Absolute 'path' on purpose: it bypasses
+# Ultralytics' global datasets_dir, which points at an unrelated
+# project on this machine and must not be modified.
+# INT8 CALIBRATION ONLY — not an evaluation set.
+#
+# The Ultralytics exporter reads data[args.split or 'val'] when collecting
+# calibration images, so the 'val' key here deliberately points at a seeded
+# sample of TRAIN tiles. Without this, INT8 would calibrate on the very
+# images we score on.
+path: /home/jetson/Desktop/yolo-tensorrt-benchmark/data/DOTAv1-calib
+train: images/val
+val: images/val
+
+names:
+  0: plane
+  1: ship
+  2: storage tank
+  3: baseball diamond
+  4: tennis court
+  5: basketball court
+  6: ground track field
+  7: harbor
+  8: bridge
+  9: large vehicle
+  10: small vehicle
+  11: helicopter
+  12: roundabout
+  13: soccer ball field
+  14: swimming pool

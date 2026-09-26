@@ -1,0 +1,41 @@
+{
+  "val_tiles": 5297,
+  "inference_ratios_vs_pytorch": {
+    "PyTorch FP32": 1.0,
+    "ONNX RT FP32": 1.15,
+    "TRT FP32": 0.6,
+    "TRT FP16": 0.32,
+    "TRT INT8": 0.28
+  },
+  "total_hours_all_20": 1.54,
+  "per_config_minutes": {
+    "yolo11n-obb": {
+      "PyTorch FP32": 5.3,
+      "ONNX RT FP32": 5.8,
+      "TRT FP32": 3.9,
+      "TRT FP16": 2.9,
+      "TRT INT8": 2.8
+    },
+    "yolo11s-obb": {
+      "PyTorch FP32": 7.4,
+      "ONNX RT FP32": 8.3,
+      "TRT FP32": 5.1,
+      "TRT FP16": 3.5,
+      "TRT INT8": 3.3
+    },
+    "yolo26n-obb": {
+      "PyTorch FP32": 4.5,
+      "ONNX RT FP32": 5.0,
+      "TRT FP32": 3.3,
+      "TRT FP16": 2.4,
+      "TRT INT8": 2.2
+    },
+    "yolo26s-obb": {
+      "PyTorch FP32": 7.3,
+      "ONNX RT FP32": 8.2,
+      "TRT FP32": 4.9,
+      "TRT FP16": 3.3,
+      "TRT INT8": 3.0
+    }
+  }
+}

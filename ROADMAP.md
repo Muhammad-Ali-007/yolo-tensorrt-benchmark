@@ -34,11 +34,11 @@ Goal: benchmark how Ultralytics' **DOTAv1-pretrained OBB models** perform across
 
 ## Stage 1: Data
 
-- [ ] Check free disk; decide where data and tiles live (gitignored)
-- [ ] Download DOTAv1 (`DOTAv1.yaml`). If the download bundles the test split, note its size and leave it untouched; do not tile or use it
-- [ ] Tile train and val with Ultralytics' documented `split_dota` procedure; record the settings and the tile counts
-- [ ] Build the calibration set: >=1000 train tiles, fixed seed, disjoint from val; record the seed and count
-- [ ] Estimate eval time per configuration x 20, and report it
+- [x] Check free disk; decide where data and tiles live (gitignored)
+- [x] Download DOTAv1 (`DOTAv1.yaml`). If the download bundles the test split, note its size and leave it untouched; do not tile or use it
+- [x] Tile train and val with Ultralytics' documented `split_dota` procedure; record the settings and the tile counts
+- [x] Build the calibration set: >=1000 train tiles, fixed seed, disjoint from val; record the seed and count
+- [x] Estimate eval time per configuration x 20, and report it
 
 *Done when:* `results/data_notes.md` has the tile counts, the calibration seed and count, and the eval-time estimate. If the estimate is impractical, stop and ask; do not shrink the eval set.
 

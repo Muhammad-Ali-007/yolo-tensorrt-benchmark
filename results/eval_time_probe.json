@@ -1,0 +1,10 @@
+{
+  "weights": "weights/yolo11n-obb.pt",
+  "imgsz": 1024,
+  "tiles_timed": 100,
+  "preprocess_ms": 4.508280020008897,
+  "inference_ms": 39.14007245002722,
+  "postprocess_ms": 5.0513504299851775,
+  "sum_stages_ms": 48.69970290002129,
+  "wall_ms_per_tile": 59.94595573999959
+}
