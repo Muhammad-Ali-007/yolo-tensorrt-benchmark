@@ -1,0 +1,44 @@
+# DOTAv1 OBB benchmark matrix: 4 models x 5 formats = 20 configurations.
+# Every script iterates this list — nothing is hardcoded per-model, so adding
+# a variant means editing this file only.
+
+imgsz: 1024      # DOTA tiles are 1024x1024
+batch: 1         # batch 1 for latency; do not change without re-exporting
+
+# Dataset yamls (absolute paths inside, to bypass ultralytics' global
+# datasets_dir which points at an unrelated project on this machine)
+data: configs/dota_obb.yaml        # evaluation: full val tile set
+calib_data: configs/dota_calib.yaml  # INT8 calibration: seeded TRAIN tiles
+
+models:
+  - name: yolo11n-obb
+    weights: weights/yolo11n-obb.pt
+    onnx: weights/yolo11n-obb.onnx
+    engines:
+      fp32: engines/yolo11n-obb_fp32.engine
+      fp16: engines/yolo11n-obb_fp16.engine
+      int8: engines/yolo11n-obb_int8.engine
+
+  - name: yolo11s-obb
+    weights: weights/yolo11s-obb.pt
+    onnx: weights/yolo11s-obb.onnx
+    engines:
+      fp32: engines/yolo11s-obb_fp32.engine
+      fp16: engines/yolo11s-obb_fp16.engine
+      int8: engines/yolo11s-obb_int8.engine
+
+  - name: yolo26n-obb
+    weights: weights/yolo26n-obb.pt
+    onnx: weights/yolo26n-obb.onnx
+    engines:
+      fp32: engines/yolo26n-obb_fp32.engine
+      fp16: engines/yolo26n-obb_fp16.engine
+      int8: engines/yolo26n-obb_int8.engine
+
+  - name: yolo26s-obb
+    weights: weights/yolo26s-obb.pt
+    onnx: weights/yolo26s-obb.onnx
+    engines:
+      fp32: engines/yolo26s-obb_fp32.engine
+      fp16: engines/yolo26s-obb_fp16.engine
+      int8: engines/yolo26s-obb_int8.engine

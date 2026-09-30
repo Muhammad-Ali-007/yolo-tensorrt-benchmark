@@ -44,11 +44,11 @@ Goal: benchmark how Ultralytics' **DOTAv1-pretrained OBB models** perform across
 
 ## Stage 2: Weights and exports
 
-- [ ] Confirm each of the 4 `.pt` files is the official DOTAv1-pretrained checkpoint (source and tag noted)
-- [ ] Confirm the installed ultralytics exports and validates yolo26 OBB correctly in every format
-- [ ] Export ONNX (FP32, `imgsz=1024`, batch 1) for all 4 models
-- [ ] Build TensorRT FP32 and FP16 engines for all 4 models via Ultralytics `export()`
-- [ ] Record file sizes and any build failures
+- [x] Confirm each of the 4 `.pt` files is the official DOTAv1-pretrained checkpoint (source and tag noted)
+- [x] Confirm the installed ultralytics exports and validates yolo26 OBB correctly in every format
+- [x] Export ONNX (FP32, `imgsz=1024`, batch 1) for all 4 models
+- [x] Build TensorRT FP32 and FP16 engines for all 4 models via Ultralytics `export()`
+- [x] Record file sizes and any build failures
 
 *Done when:* 4 `.pt`, 4 `.onnx` and 8 engines each load and run one image without error.
 

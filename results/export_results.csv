@@ -1,0 +1,13 @@
+model,format,precision,path,size_mb,build_seconds,status,error
+yolo26n-obb,onnx,fp32,weights/yolo26n-obb.onnx,9.73,4.8,ok,
+yolo26n-obb,engine,fp16,engines/yolo26n-obb_fp16.engine,8.64,344.8,ok,
+yolo11n-obb,onnx,fp32,weights/yolo11n-obb.onnx,10.49,3.6,ok,
+yolo11n-obb,engine,fp32,engines/yolo11n-obb_fp32.engine,12.35,190.2,ok,
+yolo11n-obb,engine,fp16,engines/yolo11n-obb_fp16.engine,8.44,400.5,ok,
+yolo11s-obb,onnx,fp32,weights/yolo11s-obb.onnx,37.38,3.0,ok,
+yolo11s-obb,engine,fp32,engines/yolo11s-obb_fp32.engine,39.29,214.9,ok,
+yolo11s-obb,engine,fp16,engines/yolo11s-obb_fp16.engine,22.16,430.9,ok,
+yolo26n-obb,engine,fp32,engines/yolo26n-obb_fp32.engine,11.8,145.2,ok,
+yolo26s-obb,onnx,fp32,weights/yolo26s-obb.onnx,37.61,3.7,ok,
+yolo26s-obb,engine,fp32,engines/yolo26s-obb_fp32.engine,39.53,175.2,ok,
+yolo26s-obb,engine,fp16,engines/yolo26s-obb_fp16.engine,22.42,453.6,ok,
