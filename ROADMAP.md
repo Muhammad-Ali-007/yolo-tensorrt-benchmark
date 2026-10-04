@@ -54,9 +54,9 @@ Goal: benchmark how Ultralytics' **DOTAv1-pretrained OBB models** perform across
 
 ## Stage 3: Accuracy for PyTorch, ONNX, TensorRT FP32 and FP16
 
-- [ ] Run `val()` on the full val tile set for each of these 16 configurations
-- [ ] Write OBB mAP50 and mAP50-95 to `results/accuracy_results.csv`, one row per finished configuration
-- [ ] Sanity check: PyTorch, ONNX and TensorRT FP32 agree closely for each model. Investigate any material gap before continuing
+- [x] Run `val()` on the full val tile set for each of these 16 configurations
+- [x] Write OBB mAP50 and mAP50-95 to `results/accuracy_results.csv`, one row per finished configuration
+- [x] Sanity check: PyTorch, ONNX and TensorRT FP32 agree closely for each model. Investigate any material gap before continuing
 
 *Done when:* the CSV has 16 rows and the FP32 cross-check is written up.
 

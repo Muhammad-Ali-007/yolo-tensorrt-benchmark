@@ -89,3 +89,11 @@ Likely causes to check in Stage 3, in order of suspicion:
 3. Genuine small-sample noise, which the full 5,297-tile run would wash out.
 
 This must be resolved on the full val set before Stage 3's results are trusted.
+
+---
+
+## RESOLVED (Stage 3)
+
+The open issue above was small-sample noise, not an export defect. On the full
+5,278-tile val set, PyTorch / ONNX / TensorRT FP32 agree to within 0.066% of
+their mean for every model. See `results/stage3_notes.md`.
