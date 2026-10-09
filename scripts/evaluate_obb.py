@@ -49,9 +49,14 @@ os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 import yaml
 from ultralytics import YOLO
 
+# tiles_tiled = crops split_dota produced; tiles_evaluated = what ultralytics
+# actually scored (19 are rejected by its label scan — see stage3_notes.md).
 FIELDS = ["model", "format", "precision", "artifact", "mAP50", "mAP50_95",
-          "tiles", "imgsz", "batch", "rect", "preprocess_ms", "inference_ms",
-          "postprocess_ms", "eval_seconds", "provider", "status", "error"]
+          "tiles_tiled", "tiles_evaluated", "imgsz", "batch", "rect",
+          "preprocess_ms", "inference_ms", "postprocess_ms", "eval_seconds",
+          "provider", "status", "error"]
+
+TILES_EVALUATED = 5278  # 5297 tiled - 19 rejected by the ultralytics label scan
 
 
 def done_keys(csv_path: Path) -> set:
@@ -151,7 +156,8 @@ def main() -> None:
 
             print(f"[{name}] {fmt}: evaluating {path} ...")
             row = {"model": name, "format": fmt, "precision": prec,
-                   "artifact": path, "tiles": n_tiles, "imgsz": imgsz,
+                   "artifact": path, "tiles_tiled": n_tiles,
+                   "tiles_evaluated": TILES_EVALUATED, "imgsz": imgsz,
                    "batch": batch, "rect": False}
             try:
                 t0 = time.perf_counter()

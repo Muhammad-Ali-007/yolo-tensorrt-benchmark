@@ -62,10 +62,10 @@ Goal: benchmark how Ultralytics' **DOTAv1-pretrained OBB models** perform across
 
 ## Stage 4: TensorRT INT8
 
-- [ ] Verify which split the installed ultralytics uses for INT8 calibration; force the seeded train set
-- [ ] Build INT8 engines for all 4 models
-- [ ] Run `val()` on each and add the rows to the accuracy CSV
-- [ ] Compare the accuracy drop vs FP32 per model
+- [x] Verify which split the installed ultralytics uses for INT8 calibration; force the seeded train set
+- [x] Build INT8 engines for all 4 models
+- [x] Run `val()` on each and add the rows to the accuracy CSV
+- [x] Compare the accuracy drop vs FP32 per model
 
 *Done when:* the accuracy CSV has 20 rows and the calibration seed and count are recorded.
 

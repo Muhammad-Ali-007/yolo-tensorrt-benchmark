@@ -1,0 +1,21 @@
+model,format,precision,artifact,mAP50,mAP50_95,imgsz,batch,rect,preprocess_ms,inference_ms,postprocess_ms,eval_seconds,provider,status,error,tiles_tiled,tiles_evaluated
+yolo11n-obb,pytorch,fp32,weights/yolo11n-obb.pt,0.77057,0.6027,1024,1,False,2.743,36.282,6.096,271.9,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo11n-obb,onnx,fp32,weights/yolo11n-obb.onnx,0.77054,0.60268,1024,1,False,2.72,36.521,7.314,281.7,CUDAExecutionProvider,ok,,5297,5278
+yolo11n-obb,trt-fp32,fp32,engines/yolo11n-obb_fp32.engine,0.77058,0.60285,1024,1,False,2.658,19.887,6.154,184.3,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo11n-obb,trt-fp16,fp16,engines/yolo11n-obb_fp16.engine,0.77031,0.6029,1024,1,False,2.763,11.018,6.945,144.3,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo11s-obb,pytorch,fp32,weights/yolo11s-obb.pt,0.79364,0.63259,1024,1,False,2.768,66.339,6.26,432.9,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo11s-obb,onnx,fp32,weights/yolo11s-obb.onnx,0.79358,0.63246,1024,1,False,2.721,72.992,6.154,465.9,CUDAExecutionProvider,ok,,5297,5278
+yolo11s-obb,trt-fp32,fp32,engines/yolo11s-obb_fp32.engine,0.79359,0.63253,1024,1,False,2.716,42.061,6.647,306.3,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo11s-obb,trt-fp16,fp16,engines/yolo11s-obb_fp16.engine,0.7933,0.63266,1024,1,False,2.67,20.926,5.651,185.4,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo26n-obb,pytorch,fp32,weights/yolo26n-obb.pt,0.74462,0.58932,1024,1,False,2.712,36.388,0.474,244.1,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo26n-obb,onnx,fp32,weights/yolo26n-obb.onnx,0.74465,0.58938,1024,1,False,2.694,39.513,0.648,262.3,CUDAExecutionProvider,ok,,5297,5278
+yolo26n-obb,trt-fp32,fp32,engines/yolo26n-obb_fp32.engine,0.74511,0.58948,1024,1,False,2.681,21.139,0.63,161.8,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo26n-obb,trt-fp16,fp16,engines/yolo26n-obb_fp16.engine,0.74509,0.5891,1024,1,False,2.627,11.069,0.607,107.4,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo26s-obb,pytorch,fp32,weights/yolo26s-obb.pt,0.75327,0.60523,1024,1,False,2.737,72.435,0.448,433.1,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo26s-obb,onnx,fp32,weights/yolo26s-obb.onnx,0.75321,0.60521,1024,1,False,2.741,77.23,0.648,461.5,CUDAExecutionProvider,ok,,5297,5278
+yolo26s-obb,trt-fp32,fp32,engines/yolo26s-obb_fp32.engine,0.75305,0.60518,1024,1,False,2.649,45.805,0.647,294.4,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo26s-obb,trt-fp16,fp16,engines/yolo26s-obb_fp16.engine,0.75289,0.60463,1024,1,False,2.684,21.198,0.639,163.4,torch/tensorrt (no onnxruntime session),ok,,5297,5278
+yolo11n-obb,trt-int8,int8,engines/yolo11n-obb_int8.engine,0.72987,0.56538,5297,1024,1,False,2.722,10.225,6.582,137.0,torch/tensorrt (no onnxruntime session),ok,
+yolo11s-obb,trt-int8,int8,engines/yolo11s-obb_int8.engine,0.74602,0.5776,5297,1024,1,False,2.709,15.782,6.514,165.8,torch/tensorrt (no onnxruntime session),ok,
+yolo26n-obb,trt-int8,int8,engines/yolo26n-obb_int8.engine,0.71646,0.55219,5297,1024,1,False,2.745,10.685,6.545,139.6,torch/tensorrt (no onnxruntime session),ok,
+yolo26s-obb,trt-int8,int8,engines/yolo26s-obb_int8.engine,0.74766,0.58346,5297,1024,1,False,2.708,17.392,5.998,171.2,torch/tensorrt (no onnxruntime session),ok,

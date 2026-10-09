@@ -74,7 +74,7 @@ def main() -> None:
     imgsz, batch = cfg["imgsz"], cfg["batch"]
     out = Path(args.out)
     precisions = [p for p in args.precisions.split(",") if p]
-    quant = {"fp32": 32, "fp16": 16}
+    quant = {"fp32": 32, "fp16": 16, "int8": 8}
 
     for m in cfg["models"]:
         name = m["name"]
@@ -85,7 +85,12 @@ def main() -> None:
         if not args.skip_onnx:
             targets.append(("onnx", "fp32", Path(m["onnx"]), {}, None))
         for p in precisions:
-            targets.append(("engine", p, Path(m["engines"][p]), {}, quant[p]))
+            # INT8 needs calibration data. The exporter collects it from
+            # data[args.split or "val"], so configs/dota_calib.yaml points its
+            # 'val' key at the seeded TRAIN-tile sample — without this, INT8
+            # would calibrate on the very tiles we score on.
+            extra_args = {"data": cfg["calib_data"]} if p == "int8" else {}
+            targets.append(("engine", p, Path(m["engines"][p]), extra_args, quant[p]))
 
         for fmt, prec, dest, extra, q in targets:
             if dest.exists():
