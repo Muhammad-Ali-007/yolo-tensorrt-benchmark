@@ -71,10 +71,10 @@ Goal: benchmark how Ultralytics' **DOTAv1-pretrained OBB models** perform across
 
 ## Stage 5: Latency and memory
 
-- [ ] Warmup, then measure p50 / p95 for preprocess, inference and postprocess per configuration (batch 1, clocks fixed)
-- [ ] Record peak GPU / unified memory and file size
-- [ ] Note the runtime details per row (torch device, ONNX Runtime provider, TensorRT version)
-- [ ] Write `results/benchmark_results.csv`
+- [x] Warmup, then measure p50 / p95 for preprocess, inference and postprocess per configuration (batch 1, clocks fixed)
+- [x] Record peak GPU / unified memory and file size
+- [x] Note the runtime details per row (torch device, ONNX Runtime provider, TensorRT version)
+- [x] Write `results/benchmark_results.csv`
 
 *Done when:* 20 rows, and the p50-to-p99 spread is small enough to trust.
 
