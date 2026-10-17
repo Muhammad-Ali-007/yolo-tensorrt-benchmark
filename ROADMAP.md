@@ -80,9 +80,9 @@ Goal: benchmark how Ultralytics' **DOTAv1-pretrained OBB models** perform across
 
 ## Stage 6: Power and thermals
 
-- [ ] Fix `power_profile.py` so tegrastats is sampled *while* inference runs
-- [ ] Sustained run per configuration: average power, peak temperature, any throttling
-- [ ] Write `results/power_results.csv`
+- [x] Fix `power_profile.py` so tegrastats is sampled *while* inference runs
+- [x] Sustained run per configuration: average power, peak temperature, any throttling
+- [x] Write `results/power_results.csv`
 
 *Done when:* 20 rows, and throttling is noted where it occurred.
 
