@@ -88,18 +88,18 @@ Goal: benchmark how Ultralytics' **DOTAv1-pretrained OBB models** perform across
 
 ## Stage 7: Analysis and write-up
 
-- [ ] Plots: accuracy vs latency (Pareto), accuracy drop vs FP32 by precision, power by configuration
-- [ ] README results tables filled only from the CSVs, including TensorRT speedup over the PyTorch and ONNX baselines at FP32
-- [ ] Methods section: data split and tiling, calibration choice, timing method, versions, ONNX Runtime provider
-- [ ] "What I found" section in my own words: which format wins, whether INT8 hurts rotated boxes, how the baselines compare, what surprised me
-- [ ] Limitations section (one board, one dataset, single-image latency, etc.)
-- [ ] README states how AI assistance was used
-- [ ] Reproduce section: exact commands from a fresh clone
+- [x] Plots: accuracy vs latency (Pareto), accuracy drop vs FP32 by precision, power by configuration
+- [x] README results tables filled only from the CSVs, including TensorRT speedup over the PyTorch and ONNX baselines at FP32
+- [x] Methods section: data split and tiling, calibration choice, timing method, versions, ONNX Runtime provider
+- [x] "What I found" section in my own words: which format wins, whether INT8 hurts rotated boxes, how the baselines compare, what surprised me
+- [x] Limitations section (one board, one dataset, single-image latency, etc.)
+- [x] README states how AI assistance was used
+- [x] Reproduce section: exact commands from a fresh clone
 
 *Done when:* someone else could rerun it from the README.
 
 ## Stage 8: Release
 
-- [ ] Final lint and a fresh-clone dry run
+- [x] Final lint and a fresh-clone dry run
 - [ ] Tag `v0.1`
 - [ ] Update the GitHub repo description and topics to match the new scope
